@@ -10,3 +10,4 @@
       hosts: app
     - name: postgresql
       hosts: database
+
