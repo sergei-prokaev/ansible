@@ -1,16 +1,20 @@
 ---
-# tasks file for docker
----
-- name: Install Docker
+- name: Install Docker on Ubuntu
+  become: true
   apt:
-    name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
+    name: docker.io
     state: present
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Install Docker on CentOS
+  become: true
+  yum:
+    name: docker
+    state: present
+  when: ansible_distribution == 'CentOS'
 
 - name: Start Docker service
+  become: true
   service:
     name: docker
     state: started
-    enabled: yes
