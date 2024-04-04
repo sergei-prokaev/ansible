@@ -1,12 +1,27 @@
----
-# tasks file for postgres
-- name: Install PostgreSQL
-  apt:
-    name: "postgresql-{{ postgres_version }}"
-    state: present
+- name: Install Postgres
+  hosts: database
+  become: true
+  vars:
+    postgres_data_dir: "{{ postgres_data_dir }}"
+    postgres_version: "{{ postgres_version }}"
+  tasks:
+    - name: Install Postgres
+      apt:
+        name: "postgresql-{{ postgres_version }}"
+        state: present
+      become: true
 
-- name: Start PostgreSQL service
-  service:
-    name: postgresql
-    state: started
-    enabled: yes
+    - name: Create data dir
+      file:
+        path: "{{ postgres_data_dir }}"
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: '0700'
+      become: true
+
+    - name: Run  PostgreSQL Service
+      systemd:
+        name: postgresql
+        state: started
+      become: true

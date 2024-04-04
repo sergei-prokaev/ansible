@@ -2,12 +2,9 @@
 - name: Setup application and database servers
   hosts: all
   become: true
-  vars:
-    postgres_data_dir: "{{ postgres_data_dir }}"
-    postgres_version: "{{ postgres_version }}"
   roles:
-    - name: docker
-      hosts: app
-    - name: postgresql
-      hosts: database
+    - role: docker
+      when: inventory_hostname == 'app'
 
+    - role: postgresql
+      when: inventory_hostname == 'database'

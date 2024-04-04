@@ -1,4 +1,3 @@
----
 - name: Install Docker on Ubuntu
   become: true
   apt:
@@ -13,8 +12,16 @@
     state: present
   when: ansible_distribution == 'CentOS'
 
-- name: Start Docker service
+- name: Start Docker service on Ubuntu
   become: true
   service:
     name: docker
     state: started
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Start Docker service on CentOS
+  become: true
+  service:
+    name: docker
+    state: started
+  when: ansible_distribution == 'CentOS'
